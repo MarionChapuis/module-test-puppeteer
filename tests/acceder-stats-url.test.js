@@ -63,6 +63,7 @@ describe("Acceder aux stats des url avec un compte utilisateur", () => {
 
 
         //******************************* Vérifier qu'il y a des url dans le tableau ***********************************
+        await page.waitForSelector(".sorting_1");
         //Compter le nombre de td dans la partie tbody du tableau (si supérieur à 1 alors il y a des urls)
         const tdCounts = await page.$$eval('#user_links_table_wrapper tbody td', tds => tds.length);
         console.log(tdCounts);
