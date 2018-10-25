@@ -1,10 +1,10 @@
-const timeout = 20000
+const timeout = 15000
 
 // série de tests sur la page d'accueil
 describe("Supprimer wxcv", () => {
     let page
 
-    // Créer un compte utilisateur
+    // Supprimer un compte utilisateur
     test('Supprimer wxcv', async () => {
         //******************************* Se connecter en tant qu'admin ***********************************
         await page.goto('http://polr.campus-grenoble.fr');
