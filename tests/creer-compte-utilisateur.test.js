@@ -1,4 +1,4 @@
-const timeout = 15000
+const timeout = 17000
 
 // série de tests sur la page d'accueil
 describe("Creer compte utilisateur", () => {
@@ -7,7 +7,7 @@ describe("Creer compte utilisateur", () => {
     // Créer un compte utilisateur
     test('Sign up', async () => {
         await page.goto('http://polr.campus-grenoble.fr')
-        await page.waitForSelector('#navbar li a')
+        await page.waitForSelector('nav[role="navigation"]')
         // click sur le lien "Sign up" de la navigation
         await page.evaluate( () => {
             Array
@@ -21,22 +21,22 @@ describe("Creer compte utilisateur", () => {
         // on vérifie qu'il contient la bonne chaîne de caractères
         expect(html).toContain("Register");
         // attendre que l'élément <form> soit chargé
-        await page.waitForSelector('form')
+        await page.waitForSelector('form[action="/signup"')
         //Renseigner le champ "username", sélectionner le formulaire par son action puis l'input par son name
-        await page.type('form[action="/signup"] input[name="username"]', "wxcv");
-        await page.type('form[action="/signup"] input[name="password"]', "toto");
-        await page.type('form[action="/signup"] input[name="email"]', "toto@marion.com");
+        await page.type('form[action="/signup"] input[name="username"]', "marion3");
+        await page.type('form[action="/signup"] input[name="password"]', "marion3");
+        await page.type('form[action="/signup"] input[name="email"]', "marion3@marion.com");
         // vérifier avec un screenshot ce qu'on a renseigné
-        await page.screenshot({path: './tests/img/username.png'});
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/username_marion3.png'});
         //Enregistrer le compte
         await page.click('form[action="/signup"] input[type="submit"]');
     }, timeout)
 
     // Supprimer un compte utilisateur
-    test('Supprimer wxcv', async () => {
+    test('Supprimer marion3', async () => {
         //******************************* Se connecter en tant qu'admin ***********************************
         await page.goto('http://polr.campus-grenoble.fr');
-        await page.waitForSelector('#navbar li a');
+        await page.waitForSelector('nav[role="navigation"]');
         // click sur le lien "Sign In" de la navigation
         await page.click(".dropdown-toggle");
         //Attendre que le menu déroulant s'ouvre
@@ -54,7 +54,7 @@ describe("Creer compte utilisateur", () => {
         // on vérifie qu'il contient la bonne chaîne de caractères
         expect(htmlAdmin).toContain("admin");
         //Faire un screenshot de la home page pour l'admin
-        await page.screenshot({path: './tests/img/login_admin.png'});
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/login_admin_marion3.png'});
 
         //******************************* Se rendre dans le Dashboard de l'admin ***********************************
         //Cliquer sur "Dashboard" dans le dropdown menu de l'admin
@@ -70,7 +70,7 @@ describe("Creer compte utilisateur", () => {
         // on vérifie qu'il contient la bonne chaîne de caractères
         expect(hmtlDashboard).toContain("Welcome to your Polr");
         //Faire un screenshot du dashboard pour l'admin
-        await page.screenshot({path: './tests/img/dashboard_admin.png'});
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/dashboard_admin_creer_compte.png'});
 
 
         //******************************* Se rendre sur la partie Admin du dashboard ***********************************
@@ -83,17 +83,17 @@ describe("Creer compte utilisateur", () => {
         //Vérifier que la partie "Users" soit bien chargée
         await page.waitForSelector(".users-heading");
         //Faire un screenshot de la partie Admin du dashboard
-        await page.screenshot({path: './tests/img/AdminDashboard_admin.png'});
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/AdminDashboard_creer_compte.png'});
 
 
-        //******************************* Supprimer l'utilisateur wxcv ***********************************
+        //******************************* Supprimer l'utilisateur marion3 ***********************************
         // Entrer une recherche dans la table Users avec un délai pour laisser s'afficher le résultat
-        await page.type('#admin_users_table_filter input[type="search"]', "toto@marion.com", {delay: 100});
+        await page.type('#admin_users_table_filter input[type="search"]', "marion3@marion.com", {delay: 100});
         //Vérifier qu'il n'y a qu'un seul élément dans les résultats trouvés
         const htmlSearch =  await page.$eval('#admin_users_table_info', e => e.innerHTML);
         expect(htmlSearch).toContain("Showing 1 to 1 of 1 entries");
         //Faire un screenshot de la recherche
-        await page.screenshot({path: './tests/img/search_admin.png'});
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/search_marion3.png'});
         //Vérifier que le bouton Delete pour supprimer l'utilisateur existe
         const htmlDelete = await page.$eval('#admin_users_table tr td .btn-danger', e => e.innerHTML);
         expect(htmlDelete).toContain("Delete");
@@ -101,6 +101,25 @@ describe("Creer compte utilisateur", () => {
         await page.click('#admin_users_table tr td .btn-danger');
     }, timeout)
 
+    //Se déconnecter du compte admin
+    test('se deconnecter du compte admin', async () => {
+        await page.click('.login-name', {delay : 500});
+        await page.waitForSelector('.dropdown-menu');
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/avant_logout_admin.png'});
+        await page.evaluate( () => {
+            Array
+            .from( document.querySelectorAll('.dropdown-menu li a'))
+            .filter( el => el.textContent === 'Logout')[0].click();
+        });
+        //Attendre que l'écran soit sur la page principale (donc déconnectée)
+        await page.waitForSelector('h1');
+        //Vérifier qu'on est déconnecté en cherchant "sign in"
+        const htmlLogout = await page.$eval('.dropdown-toggle', e => e.innerHTML);
+        expect(htmlLogout).toContain('Sign In');
+        //Screenshot déconnexion
+        await page.screenshot({path: './tests/img/creer_compte_utilisateur/logout_admin.png'});
+
+    }, timeout)
 
     // cette fonction est lancée avant chaque test de cette
     // série de tests

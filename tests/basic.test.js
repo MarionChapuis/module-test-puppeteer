@@ -13,7 +13,7 @@ describe("Tests basiques", () => {
         // récupérer le contenu de l'élément <body>
         const html = await page.$eval('body', e => e.innerHTML)
         // vérifier que dans cet élément Body on trouve "Polr du campus"
-        await page.screenshot({path: './tests/img/basic-home.png'});
+        await page.screenshot({path: './tests/img/basic/basic-home.png'});
         expect(html).toContain("Polr du campus")
     }, timeout)
 

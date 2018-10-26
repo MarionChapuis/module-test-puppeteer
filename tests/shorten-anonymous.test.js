@@ -15,7 +15,7 @@ describe("Shorten Anonymous", () => {
         await page.waitForSelector('#short_url');
         const val = await page.$eval('#short_url', el => el.value);
         expect(val).toMatch(/^http:\/\/polr\.campus\-grenoble\.fr\/[0-9]+/);
-        await page.screenshot({path: './tests/img/shorten2.png'});
+        await page.screenshot({path: './tests/img/shorten_anonymous/shorten2.png'});
     }, timeout)
 
 
