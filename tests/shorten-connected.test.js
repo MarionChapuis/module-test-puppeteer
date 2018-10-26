@@ -4,7 +4,6 @@ const timeout = 15000
 describe("Generer un url simplifié avec un compte utilisateur", () => {
     let page
 
-    // Se connecter à un compte utilisateur
     test('Generer un url simplifié avec un compte utilisateur', async () => {
         //******************************* Se connecter en tant qu'utilisateur ***********************************
         await page.goto('http://polr.campus-grenoble.fr');
@@ -21,10 +20,9 @@ describe("Generer un url simplifié avec un compte utilisateur", () => {
         //Attendre que dans la nouvelle page il y est bien la partie "login-name"
         await page.waitForSelector('.login-name');
         //Vérifier que le nom utilisateur soit bien le bon
-        // on récupère le code HTML
         const htmlAdmin = await page.$eval('.login-name', e => e.innerHTML);
-        // on vérifie qu'il contient la bonne chaîne de caractères
         expect(htmlAdmin).toContain("wxcv");
+
 
         //******************************* Créer un url simplifié  ***********************************
         await page.waitForSelector('.long-link-input');
